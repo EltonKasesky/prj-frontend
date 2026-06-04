@@ -11,7 +11,7 @@ export default function LinkNavigate({ url, title }: LinkNavigateProps) {
         <>
             <Link
                 to={url}
-                className="text-main-color dark:text-main-dark-color font-medium text-sm hover:text-main-rover dark:hover:text-main-rover-dark transition-colors"
+                className="text-main-color dark:text-main-color-dark font-medium text-sm hover:text-main-rover dark:hover:text-main-rover-dark transition-colors"
             >
                 {title}
             </Link>

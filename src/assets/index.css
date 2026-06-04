@@ -11,11 +11,15 @@
 
     /* Text Colors */
     --color-main-color: #364153;
-    --color-main-dark-color: #e4e4e7;
+    --color-main-color-dark: #e4e4e7;
 
     /* Rover Colors */
     --color-main-rover: #008236;
     --color-main-rover-dark: #ffd230;
+
+    /* Border Colors */
+    --color-main-border: #e4e4e7;
+    --color-main-border-dark: #3f3f46;
 }
 
 @custom-variant dark (&:where(.dark, .dark *));

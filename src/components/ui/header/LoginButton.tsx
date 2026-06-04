@@ -6,7 +6,7 @@ export default function LoginButton() {
         <>
             <Link
                 to={"/"}
-                className="flex items-center gap-2 font-medium text-sm text-main-color dark:text-main-dark-color hover:text-main-rover dark:hover:text-main-rover-dark transition-colors"
+                className="flex items-center gap-2 font-medium text-sm text-main-color dark:text-main-color-dark hover:text-main-rover dark:hover:text-main-rover-dark transition-colors"
             >
                 Login
                 <LogInIcon />
