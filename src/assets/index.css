@@ -1,0 +1,21 @@
+@import "tailwindcss";
+
+@theme {
+    /* Fontes */
+    --font-sans: "Inter", sans-serif;
+
+    /* Background colors */
+    --color-main-bg: #ffffff;
+    --color-main-bg-dark: #27272a;
+    --color-secondary-bg: #e4e4e7;
+
+    /* Text Colors */
+    --color-main-color: #364153;
+    --color-main-dark-color: #e4e4e7;
+
+    /* Rover Colors */
+    --color-main-rover: #008236;
+    --color-main-rover-dark: #ffd230;
+}
+
+@custom-variant dark (&:where(.dark, .dark *));
