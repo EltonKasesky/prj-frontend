@@ -8,9 +8,12 @@ import Separator from "../ui/Separator";
 import ThemeToogle from "../ui/header/ThemeToogle";
 import HeaderNavigate from "../ui/header/HeaderNavigate";
 import HamburguerMenu from "../ui/header/HamburguerMenu";
+import { useAuth } from "../../context/AuthContext";
+import ProfileDownMenu from "../ui/header/ProfileDownMenu";
 
 export default function Header() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const { isAuthenticated } = useAuth();
 
     return (
         <>
@@ -38,7 +41,11 @@ export default function Header() {
                             <Separator />
                             <ThemeToogle />
                             <Separator />
-                            <LoginButton />
+                            {isAuthenticated ? (
+                                <ProfileDownMenu />
+                            ) : (
+                                <LoginButton />
+                            )}
                         </div>
                     </section>
 
