@@ -6,15 +6,20 @@
 
     /* Background colors */
     --color-main-bg: #ffffff;
-    --color-main-bg-dark: #27272a;
-    --color-secondary-bg: #e4e4e7;
+    --color-main-bg-dark: #18181b;
+    --color-secondary-bg: #fafafa;
+    --color-secondary-bg-dark: #09090b;
 
     /* Text Colors */
-    --color-main-color: #364153;
+    --color-main-color: #18181b;
     --color-main-color-dark: #e4e4e7;
+    --color-secondary-color: #71717b;
+    --color-secondary-color-dark: #9f9fa9;
+    --color-highlight-color: #009689;
+    --color-highlight-color-dark: #00d5be;
 
     /* Rover Colors */
-    --color-main-rover: #008236;
+    --color-main-rover: #00bca3;
     --color-main-rover-dark: #ffd230;
 
     /* Border Colors */
