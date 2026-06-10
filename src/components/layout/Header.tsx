@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router";
 import { MenuIcon, Minimize2Icon } from "lucide-react";
-import logo from "../../assets/logo.jpg";
+import logo from "../../assets/logo.png";
 import Title from "../ui/header/Title";
 import LoginButton from "../ui/header/LoginButton";
 import Separator from "../ui/Separator";
@@ -15,9 +15,9 @@ export default function Header() {
     return (
         <>
             <header className="flex justify-center w-full h-16 transition-colors bg-main-bg dark:bg-main-bg-dark border-b border-main-border dark:border-main-border-dark px-4 relative">
-                <div className="flex justify-between xl:w-7xl w-full items-center">
+                <section className="flex justify-between xl:w-7xl w-full items-center">
                     {/* LADO ESQUERDO: Logo e Título */}
-                    <div className="flex flex-1 h-full items-center">
+                    <section className="flex flex-1 h-full items-center">
                         <Link
                             to={"/"}
                             className="flex items-center gap-2 h-full"
@@ -29,10 +29,10 @@ export default function Header() {
                             />
                             <Title />
                         </Link>
-                    </div>
+                    </section>
 
                     {/* LADO DIREITO (DESKTOP) */}
-                    <div className="hidden lg:flex justify-end items-center flex-2 h-full">
+                    <section className="hidden lg:flex justify-end items-center flex-2 h-full">
                         <div className="flex h-full items-center">
                             <HeaderNavigate />
                             <Separator />
@@ -40,10 +40,10 @@ export default function Header() {
                             <Separator />
                             <LoginButton />
                         </div>
-                    </div>
+                    </section>
 
                     {/* LADO DIREITO (MOBILE/TABLET) */}
-                    <div className="flex lg:hidden items-center gap-4">
+                    <section className="flex lg:hidden items-center gap-4">
                         <ThemeToogle />
 
                         <button
@@ -52,8 +52,8 @@ export default function Header() {
                         >
                             {isMenuOpen ? <Minimize2Icon /> : <MenuIcon />}
                         </button>
-                    </div>
-                </div>
+                    </section>
+                </section>
 
                 {isMenuOpen && <HamburguerMenu setIsMenuOpen={setIsMenuOpen} />}
             </header>
