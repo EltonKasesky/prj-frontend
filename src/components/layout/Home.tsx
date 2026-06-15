@@ -33,11 +33,14 @@ export default function Home() {
     return (
         <main className="min-h-screen bg-secondary-bg dark:bg-secondary-bg-dark transition-colors duration-300">
             <section className="relative max-w-7xl mx-auto px-4 pt-16 pb-20 sm:px-6 lg:px-8 text-center overflow-hidden">
-                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-125 h-125 bg-emerald-500/10 blur-3xl rounded-full pointer-events-none" />
+                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-125 h-125 bg-emerald-500/15 dark:bg-amber-500/10 blur-3xl rounded-full pointer-events-none" />
 
                 <h1 className="text-4xl font-black tracking-tight text-main-color dark:text-main-color-dark sm:text-6xl max-w-4xl mx-auto leading-[1.15]">
                     O Álbum de Figurinhas Digital da{" "}
-                    <span className="text-transparent bg-clip-text bg-linear-to-r from-teal-500 via-emerald-500 to-cyan-500">
+                    <span
+                        className="text-transparent bg-clip-text bg-linear-to-r from-teal-500 via-emerald-500 to-cyan-500 dark:from-yellow-600 
+                            dark:via-amber-400 dark:to-amber-200"
+                    >
                         Copa do Mundo 2026
                     </span>
                 </h1>
@@ -50,8 +53,8 @@ export default function Home() {
                 <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center items-center">
                     <Link
                         to="/"
-                        className="w-full sm:w-auto inline-flex items-center justify-center px-8 py-4 bg-zinc-900 hover:bg-zinc-800 dark:bg-zinc-50 
-                          dark:hover:bg-zinc-200 text-white dark:text-zinc-950 font-bold rounded-2xl shadow-lg transition-all transform hover:scale-[1.02]"
+                        className="w-full sm:w-auto inline-flex items-center justify-center px-8 py-4 bg-zinc-900 dark:bg-zinc-50 
+                            text-white dark:text-zinc-950 font-bold rounded-2xl shadow-lg transition-all transform hover:scale-[1.02]"
                     >
                         <AlbumIcon className="w-5 h-5 mr-2" />
                         Acessar Álbum
@@ -59,8 +62,8 @@ export default function Home() {
 
                     <Link
                         to="/"
-                        className="w-full sm:w-auto inline-flex items-center justify-center px-8 py-4 bg-teal-500 hover:bg-teal-600 text-white font-bold 
-                            rounded-2xl shadow-md shadow-teal-500/20 transition-all transform hover:scale-[1.02]"
+                        className="w-full sm:w-auto inline-flex items-center justify-center px-8 py-4 bg-highlight-bg dark:bg-yellow-500 
+                            text-white font-bold rounded-2xl shadow-md shadow-teal-500/20 dark:shadow-yellow-600 transition-all transform hover:scale-[1.02]"
                     >
                         <IdCardLanyardIcon className="w-5 h-5 mr-2" />
                         Acessar Figurinhas

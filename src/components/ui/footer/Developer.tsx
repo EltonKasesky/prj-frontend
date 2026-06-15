@@ -11,8 +11,8 @@ export default function Developer({ url, name }: DeveloperProps) {
             <a
                 href={url}
                 target="_blank"
-                className="flex items-center gap-1 text-main-color dark:text-main-color-dark hover:text-main-rover 
-                    dark:hover:text-main-rover-dark transition-colors"
+                className="flex items-center gap-1 text-main-color dark:text-main-color-dark hover:text-main-hover 
+                    dark:hover:text-main-hover-dark transition-colors"
             >
                 {name}
                 <LinkIcon size={"16px"} />

@@ -13,10 +13,10 @@ export function FeatureCard({
 }: FeatureCardProps) {
     return (
         <div
-            className="flex flex-col items-center p-6 bg-white dark:bg-zinc-900 rounded-2xl shadow-sm border border-zinc-100 dark:border-zinc-800 
+            className="flex flex-col items-center p-6 bg-main-bg dark:bg-main-bg-dark rounded-2xl shadow-sm border border-main-border dark:border-main-border-dark 
                 transition-all duration-300 hover:shadow-md hover:-translate-y-1"
         >
-            <div className="p-3 bg-teal-50 dark:bg-teal-950/30 text-highlight-color dark:text-highlight-color-dark rounded-xl mb-4">
+            <div className="p-3 bg-secondary-bg dark:bg-secondary-bg-dark text-highlight-color dark:text-highlight-color-dark rounded-xl mb-4">
                 <Icon className="w-6 h-6" />
             </div>
             <h3 className="text-lg font-semibold text-main-color dark:text-main-color-dark mb-2">
