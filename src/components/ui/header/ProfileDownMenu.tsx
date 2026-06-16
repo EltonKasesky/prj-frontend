@@ -5,11 +5,12 @@ import {
     UserIcon,
     SettingsIcon,
     ChevronDownIcon,
+    ShieldUserIcon,
 } from "lucide-react";
 import ProfileDownMenuLink from "./ProfileDownMenuLink";
 
 export default function ProfileDownMenu() {
-    const { user, logout } = useAuth();
+    const { user, logout, isAdmin } = useAuth();
     const [isOpen, setIsOpen] = useState(false);
     const menuRef = useRef<HTMLDivElement>(null);
 
@@ -74,15 +75,24 @@ export default function ProfileDownMenu() {
                         </p>
                     </div>
 
+                    {isAdmin && (
+                        <ProfileDownMenuLink
+                            to={"/admin"}
+                            icon={ShieldUserIcon}
+                            text={"Administrador"}
+                            setIsOpen={setIsOpen}
+                        />
+                    )}
+
                     <ProfileDownMenuLink
-                        to={"/"}
+                        to={"/profile"}
                         icon={UserIcon}
                         text={"Meu perfil"}
                         setIsOpen={setIsOpen}
                     />
 
                     <ProfileDownMenuLink
-                        to={"/"}
+                        to={"/config"}
                         icon={SettingsIcon}
                         text={"Configurações"}
                         setIsOpen={setIsOpen}

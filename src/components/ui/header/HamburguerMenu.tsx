@@ -8,7 +8,19 @@ interface HamburguerMenuProps {
 }
 
 export default function HamburguerMenu({ setIsMenuOpen }: HamburguerMenuProps) {
-    const { isAuthenticated } = useAuth();
+    const { isAuthenticated, isAdmin, isAuthor, isCollector } = useAuth();
+
+    const showLinkAlbum = () => {
+        if (isAdmin || isAuthor || isCollector) return true;
+
+        return false;
+    };
+
+    const showLinkFigures = () => {
+        if (isAdmin || isAuthor) return true;
+
+        return false;
+    };
 
     return (
         <>
@@ -16,16 +28,26 @@ export default function HamburguerMenu({ setIsMenuOpen }: HamburguerMenuProps) {
                 <nav>
                     <ul className="flex flex-col gap-4">
                         <li onClick={() => setIsMenuOpen(false)}>
-                            <LinkNavigate url={"/"} title={"Album"} />
+                            <LinkNavigate url={"/"} title={"Página Inicial"} />
                         </li>
+
+                        {showLinkAlbum() && (
+                            <li onClick={() => setIsMenuOpen(false)}>
+                                <LinkNavigate url={"/album"} title={"Album"} />
+                            </li>
+                        )}
+
+                        {showLinkFigures() && (
+                            <li onClick={() => setIsMenuOpen(false)}>
+                                <LinkNavigate
+                                    url={"/figures"}
+                                    title={"Figurinhas"}
+                                />
+                            </li>
+                        )}
+
                         <li onClick={() => setIsMenuOpen(false)}>
-                            <LinkNavigate url={"/"} title={"Usuários"} />
-                        </li>
-                        <li onClick={() => setIsMenuOpen(false)}>
-                            <LinkNavigate url={"/"} title={"Sobre"} />
-                        </li>
-                        <li onClick={() => setIsMenuOpen(false)}>
-                            <LinkNavigate url={"/"} title={"Administrador"} />
+                            <LinkNavigate url={"/about"} title={"Sobre"} />
                         </li>
                     </ul>
                 </nav>

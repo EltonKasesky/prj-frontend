@@ -33,6 +33,27 @@
     /* Focus Colors */
     --color-main-focus: #00bca3;
     --color-main-focus-dark: #f0b100;
+
+    /* Animations */
+    --animate-fade-in: fade-in 0.2s ease-out;
+    --animate-slide-in: slide-in 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+
+    @keyframes fade-in {
+        from {
+            opacity: 0;
+        }
+        to {
+            opacity: 1;
+        }
+    }
+    @keyframes slide-in {
+        from {
+            transform: translateX(-100%);
+        }
+        to {
+            transform: translateX(0);
+        }
+    }
 }
 
 @custom-variant dark (&:where(.dark, .dark *));
