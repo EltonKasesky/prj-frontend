@@ -1,4 +1,4 @@
-import { CornerDownLeftIcon, LogInIcon } from "lucide-react";
+import { CornerDownLeftIcon, LoaderCircleIcon, LogInIcon } from "lucide-react";
 import { Link, useNavigate } from "react-router";
 import ThemeToogle from "../ui/header/ThemeToogle";
 import InputLabel from "../ui/InputLabel";
@@ -10,6 +10,7 @@ import { useAuth } from "../../context/AuthContext";
 export default function Login() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [loading, setLoading] = useState(false);
     const { login } = useAuth();
     const navigate = useNavigate();
 
@@ -17,11 +18,19 @@ export default function Login() {
         event.preventDefault();
 
         try {
+            setLoading(true);
+
             const response = await AuthService.authUser(email, password);
             await login(response.token);
+
+            setLoading(false);
             navigate("/");
-        } catch (error: any) {
-            alert(error.response?.data?.message || "Falha ao realizar login");
+        } catch (error: unknown) {
+            setLoading(false);
+            const err = error as {
+                response?: { data?: { message?: string } };
+            };
+            alert(err.response?.data?.message || "Falha ao realizar login.");
         }
     };
 
@@ -76,6 +85,8 @@ export default function Login() {
                                 onChange={(event) =>
                                     setEmail(event.target.value)
                                 }
+                                placeholder="example@email.com"
+                                required
                             />
                             <InputLabel
                                 label={"Senha"}
@@ -84,6 +95,8 @@ export default function Login() {
                                 onChange={(event) =>
                                     setPassword(event.target.value)
                                 }
+                                placeholder="********"
+                                required
                             />
 
                             <button
@@ -91,8 +104,13 @@ export default function Login() {
                                 className="flex items-center justify-center py-2 bg-highlight-bg dark:bg-highlight-bg-dark text-white text-md font-bold cursor-pointer
                                     rounded-md shadow-md shadow-teal-500/20 dark:shadow-yellow-600 transition-all transform hover:scale-[1.02]"
                             >
-                                <LogInIcon className="w-5 h-5 mr-2" />
-                                Entrar
+                                {loading ? (
+                                    <LoaderCircleIcon className="w-5 h-5 mr-2 animate-spin" />
+                                ) : (
+                                    <LogInIcon className="w-5 h-5 mr-2" />
+                                )}
+
+                                {loading ? "Entrando..." : "Entrar"}
                             </button>
                         </section>
                     </form>
