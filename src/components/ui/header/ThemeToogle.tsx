@@ -8,6 +8,7 @@ export default function ThemeToogle() {
         <button
             onClick={toggleTheme}
             className="text-main-color dark:text-main-color-dark hover:text-main-hover dark:hover:text-main-hover-dark cursor-pointer transition-colors"
+            title="Trocar Tema"
         >
             {theme === "dark" ? <SunIcon /> : <MoonIcon />}
         </button>

@@ -8,27 +8,54 @@ import { FeatureCard } from "../ui/home/FeatureCard";
 import { AlbumHighlight } from "../ui/home/AlbumHighlight";
 import { Link } from "react-router";
 import { useEffect, useState } from "react";
+import { useAuth } from "../../context/AuthContext";
+import { StatisticsService } from "../../services/statistics.services";
 
 export default function Home() {
+    const { isAuthenticated, isAdmin, isAuthor, isCollector } = useAuth();
     const [figures, setFigures] = useState(0);
     const [teams, setTeams] = useState(0);
-    const [authors, SetAuthors] = useState(0);
+    const [authors, setAuthors] = useState(0);
     const [album, setAlbum] = useState(0);
     const [missingFigures, setMissingFigures] = useState(0);
     const [missingPercent, setMissingPercent] = useState(0);
 
     useEffect(() => {
-        const setupData = async () => {
-            setFigures(0);
-            setAlbum(0);
-            setTeams(0);
-            SetAuthors(0);
-            setMissingFigures(0);
-            setMissingPercent(0);
+        const getStatsForFillHomePage = async () => {
+            try {
+                const response = await StatisticsService.getStatsForHomePage();
+                setAuthors(response.authors);
+                setFigures(response.figures);
+                setTeams(response.teams);
+                setAlbum(response.album);
+                setMissingFigures(response.album - response.figures);
+                setMissingPercent((response.album / response.figures) * 100);
+            } catch (error: unknown) {
+                const err = error as {
+                    response?: { data?: { message?: string } };
+                };
+                alert(
+                    err.response?.data?.message ||
+                        "Falha ao buscar dados para a página inicial.",
+                );
+            }
         };
 
-        setupData();
+        getStatsForFillHomePage();
     }, []);
+
+    const canShowAccessAlbumButton = () => {
+        if (isAuthenticated && (isAdmin || isAuthor || isCollector))
+            return true;
+
+        return false;
+    };
+
+    const canShowAccessFiguresButton = () => {
+        if (isAuthenticated && (isAdmin || isAuthor)) return true;
+
+        return false;
+    };
 
     return (
         <main className="min-h-screen bg-secondary-bg dark:bg-secondary-bg-dark transition-colors duration-300">
@@ -50,25 +77,31 @@ export default function Home() {
                     todos os jogadores da copa de 2026.
                 </p>
 
-                <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center items-center">
-                    <Link
-                        to="/"
-                        className="w-full sm:w-auto inline-flex items-center justify-center px-8 py-4 bg-zinc-900 dark:bg-zinc-50 
-                            text-white dark:text-zinc-950 font-bold rounded-2xl shadow-lg transition-all transform hover:scale-[1.02]"
-                    >
-                        <AlbumIcon className="w-5 h-5 mr-2" />
-                        Acessar Álbum
-                    </Link>
+                {isAuthenticated && (
+                    <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center items-center">
+                        {canShowAccessAlbumButton() && (
+                            <Link
+                                to="/album"
+                                className="w-full sm:w-auto inline-flex items-center justify-center px-8 py-4 bg-zinc-900 dark:bg-zinc-50
+                                    text-white dark:text-zinc-950 font-bold rounded-2xl shadow-lg transition-all transform hover:scale-[1.02]"
+                            >
+                                <AlbumIcon className="w-5 h-5 mr-2" />
+                                Acessar Álbum
+                            </Link>
+                        )}
 
-                    <Link
-                        to="/"
-                        className="w-full sm:w-auto inline-flex items-center justify-center px-8 py-4 bg-highlight-bg dark:bg-yellow-500 
-                            text-white font-bold rounded-2xl shadow-md shadow-teal-500/20 dark:shadow-yellow-600 transition-all transform hover:scale-[1.02]"
-                    >
-                        <IdCardLanyardIcon className="w-5 h-5 mr-2" />
-                        Acessar Figurinhas
-                    </Link>
-                </div>
+                        {canShowAccessFiguresButton() && (
+                            <Link
+                                to="/figures"
+                                className="w-full sm:w-auto inline-flex items-center justify-center px-8 py-4 bg-highlight-bg dark:bg-yellow-500 
+                                    text-white font-bold rounded-2xl shadow-md shadow-teal-500/20 dark:shadow-yellow-600 transition-all transform hover:scale-[1.02]"
+                            >
+                                <IdCardLanyardIcon className="w-5 h-5 mr-2" />
+                                Acessar Figurinhas
+                            </Link>
+                        )}
+                    </div>
+                )}
             </section>
 
             <section className="max-w-7xl mx-auto px-4 pb-12 lg:pb-24 sm:px-6 lg:px-8">
@@ -78,7 +111,7 @@ export default function Home() {
                     </div>
 
                     <div
-                        className="bg-white dark:bg-zinc-900 p-8 rounded-3xl border border-zinc-100 dark:border-zinc-800 shadow-sm flex flex-col 
+                        className="bg-main-bg dark:bg-main-bg-dark p-8 rounded-3xl border border-main-border dark:border-main-border-dark shadow-md flex flex-col 
                             justify-between"
                     >
                         <div>
@@ -87,14 +120,14 @@ export default function Home() {
                                     Progresso do Álbum
                                 </h3>
                                 <span
-                                    className="text-xs font-semibold px-2.5 py-1 rounded-lg bg-zinc-100 dark:bg-zinc-800 text-secondary-color 
+                                    className="text-xs font-semibold px-2.5 py-1 rounded-lg bg-secondary-bg dark:bg-secondary-bg-dark text-secondary-color 
                                         dark:text-secondary-color-dark"
                                 >
                                     Faltam {missingFigures}
                                 </span>
                             </div>
 
-                            <div className="w-full bg-zinc-100 dark:bg-zinc-800 h-3 rounded-full overflow-hidden mb-2">
+                            <div className="w-full bg-secondary-bg dark:bg-secondary-bg-dark h-3 rounded-full overflow-hidden mb-2">
                                 <div
                                     className="bg-linear-to-r from-teal-500 to-emerald-500 h-full rounded-full transition-all duration-500"
                                     style={{ width: `${missingPercent}%` }}
@@ -107,7 +140,7 @@ export default function Home() {
                         </div>
 
                         <div className="space-y-3">
-                            <div className="p-4 rounded-xl bg-zinc-50 dark:bg-zinc-950 flex items-center justify-between">
+                            <div className="p-4 rounded-xl bg-secondary-bg dark:bg-secondary-bg-dark flex items-center justify-between">
                                 <span className="text-sm font-medium text-secondary-color dark:text-secondary-color-dark">
                                     Total de Autores
                                 </span>
@@ -115,22 +148,24 @@ export default function Home() {
                                     {authors}
                                 </span>
                             </div>
-                            <Link
-                                to={"/"}
-                                className="flex justify-center py-3 bg-zinc-100 hover:bg-zinc-200 dark:bg-zinc-800 dark:hover:bg-zinc-700 
+                            {canShowAccessFiguresButton() && (
+                                <Link
+                                    to={"/figures"}
+                                    className="flex justify-center py-3 bg-secondary-bg dark:bg-secondary-bg-dark
                                     text-main-color dark:text-main-color-dark font-semibold rounded-xl text-sm transition-colors"
-                            >
-                                Adicionar Figurinhas
-                            </Link>
+                                >
+                                    Adicionar Figurinhas
+                                </Link>
+                            )}
                         </div>
                     </div>
                 </div>
             </section>
 
-            <section className="bg-zinc-100/60 dark:bg-zinc-900/30 border-t border-zinc-200/50 dark:border-zinc-800/50 py-8 lg:py-20">
+            <section className="bg-secondary-bg dark:bg-secondary-bg-dark border-t border-main-border dark:border-main-border-dark py-8 lg:py-20">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="text-center max-w-3xl mx-auto mb-8 lg:mb-16">
-                        <h2 className="text-2xl font-extrabold text-zinc-900 dark:text-zinc-50 sm:text-3xl">
+                        <h2 className="text-2xl font-extrabold text-main-color dark:text-main-color-dark sm:text-3xl">
                             Como funciona o Álbum da Copa?
                         </h2>
                         <p className="mt-4 text-secondary-color dark:text-secondary-color-dark">

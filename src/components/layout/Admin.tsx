@@ -2,7 +2,7 @@ import { useState } from "react";
 import { MenuIcon, XIcon, ShieldCheckIcon } from "lucide-react";
 import AdminSidebar from "../ui/admin/AdminSidebar";
 import DashboardTab from "../ui/admin/DashboardTab";
-import UsersTab from "../ui/admin/UsersTab";
+import UsersTab from "../ui/admin/users/UsersTab";
 
 export default function Admin() {
     const [activeTab, setActiveTab] = useState("dashboard");
@@ -32,7 +32,10 @@ export default function Admin() {
 
     return (
         <main className="flex flex-col md:flex-row w-full min-h-[calc(100vh-4rem)] bg-secondary-bg dark:bg-secondary-bg-dark transition-colors duration-300">
-            <div className="md:hidden flex items-center justify-between px-4 py-3 bg-main-bg dark:bg-main-bg-dark border-b border-main-border dark:border-main-border-dark shrink-0">
+            <div
+                className="md:hidden flex items-center justify-between px-4 py-3 bg-main-bg dark:bg-main-bg-dark border-b border-main-border 
+                    dark:border-main-border-dark shrink-0"
+            >
                 <div className="flex items-center gap-2">
                     <ShieldCheckIcon className="w-5 h-5 text-highlight-color dark:text-highlight-color-dark" />
                     <span className="font-bold text-sm text-main-color dark:text-main-color-dark">
@@ -41,7 +44,9 @@ export default function Admin() {
                 </div>
                 <button
                     onClick={() => setIsMobileOpen(true)}
-                    className="p-2 text-main-color dark:text-main-color-dark bg-secondary-bg dark:bg-secondary-bg-dark border border-main-border dark:border-main-border-dark rounded-xl cursor-pointer hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-all"
+                    className="p-2 text-main-color dark:text-main-color-dark bg-secondary-bg dark:bg-secondary-bg-dark border border-main-border 
+                        dark:border-main-border-dark rounded-xl cursor-pointer hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-all"
+                    title="Exibir Menu"
                 >
                     <MenuIcon className="w-5 h-5" />
                 </button>
@@ -61,11 +66,15 @@ export default function Admin() {
                         className="fixed inset-0 bg-black/60 z-45 md:hidden transition-opacity duration-300 backdrop-blur-xs"
                     />
 
-                    <div className="fixed inset-y-0 left-0 w-64 z-50 md:hidden bg-main-bg dark:bg-main-bg-dark flex flex-col shadow-2xl transition-transform duration-300 animate-slide-in">
+                    <div
+                        className="fixed inset-y-0 left-0 w-64 z-50 md:hidden bg-main-bg dark:bg-main-bg-dark flex flex-col shadow-2xl transition-transform duration-300 
+                            animate-slide-in"
+                    >
                         <div className="absolute top-4 right-4 z-55">
                             <button
                                 onClick={() => setIsMobileOpen(false)}
-                                className="p-2 text-main-color dark:text-main-color-dark bg-secondary-bg dark:bg-secondary-bg-dark border border-main-border dark:border-main-border-dark rounded-xl cursor-pointer hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-all"
+                                className="p-2 text-main-color dark:text-main-color-dark bg-secondary-bg dark:bg-secondary-bg-dark border border-main-border 
+                                    dark:border-main-border-dark rounded-xl cursor-pointer hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-all"
                             >
                                 <XIcon className="w-4 h-4" />
                             </button>
