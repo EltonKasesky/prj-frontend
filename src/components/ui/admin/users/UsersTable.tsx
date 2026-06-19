@@ -9,6 +9,8 @@ import {
     ChevronRightIcon,
     ChevronsRightIcon,
     UserRoundCheckIcon,
+    AlertCircleIcon,
+    XIcon,
 } from "lucide-react";
 import { UserService } from "../../../../services/user.services";
 import type { UserResponseDTO } from "../../../../types/user.types";
@@ -31,6 +33,14 @@ export default function UsersTable({
     const [size, setSize] = useState(5);
     const [totalPages, setTotalPages] = useState(0);
     const [totalElements, setTotalElements] = useState(0);
+    const [tableError, setTableError] = useState<string | null>(null);
+
+    useEffect(() => {
+        if (tableError) {
+            const timer = setTimeout(() => setTableError(null), 5000);
+            return () => clearTimeout(timer);
+        }
+    }, [tableError]);
 
     const getUsers = async () => {
         try {
@@ -42,7 +52,7 @@ export default function UsersTable({
             const err = error as {
                 response?: { data?: { message?: string } };
             };
-            alert(err.response?.data?.message || "Falha ao buscar usuários.");
+            setTableError(err.response?.data?.message || "Falha ao buscar usuários.");
         }
     };
 
@@ -62,7 +72,7 @@ export default function UsersTable({
             const err = error as {
                 response?: { data?: { message?: string } };
             };
-            alert(err.response?.data?.message || "Falha ao desativar usuário.");
+            setTableError(err.response?.data?.message || "Falha ao desativar usuário.");
         }
     };
 
@@ -74,7 +84,7 @@ export default function UsersTable({
             const err = error as {
                 response?: { data?: { message?: string } };
             };
-            alert(err.response?.data?.message || "Falha ao ativar usuário.");
+            setTableError(err.response?.data?.message || "Falha ao ativar usuário.");
         }
     };
 
@@ -112,6 +122,21 @@ export default function UsersTable({
                             dark:focus:outline-main-focus-dark"
                 />
             </section>
+
+            {tableError && (
+                <div className="flex items-center justify-between gap-2 p-3 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-600 dark:text-rose-400 text-sm font-medium animate-fade-in">
+                    <div className="flex items-center gap-2">
+                        <AlertCircleIcon className="w-4 h-4 shrink-0" />
+                        {tableError}
+                    </div>
+                    <button
+                        onClick={() => setTableError(null)}
+                        className="p-1 hover:bg-rose-500/10 rounded-lg transition-colors cursor-pointer shrink-0"
+                    >
+                        <XIcon className="w-3.5 h-3.5" />
+                    </button>
+                </div>
+            )}
 
             <section
                 className="bg-main-bg dark:bg-main-bg-dark rounded-2xl border border-main-border dark:border-main-border-dark shadow-md overflow-hidden 
@@ -155,7 +180,7 @@ export default function UsersTable({
                                                         0,
                                                     )}
                                                 </div>
-                                                <h4 className="font-bold text-sm text-main-color dark:text-main-color-dark">
+                                                <h4 className="font-bold text-sm text-nowrap text-main-color dark:text-main-color-dark">
                                                     {user.name}
                                                 </h4>
                                             </div>

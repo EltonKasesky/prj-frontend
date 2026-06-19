@@ -7,6 +7,8 @@ import {
     SaveIcon,
     CheckIcon,
     Undo2Icon,
+    AlertCircleIcon,
+    CheckCircleIcon,
 } from "lucide-react";
 import { UserService } from "../../../../services/user.services";
 import type { UserResponseDTO } from "../../../../types/user.types";
@@ -32,6 +34,15 @@ export default function UpdateUser({ userId, setUpdate }: UpdateUserProps) {
     const [selectedRoles, setSelectedRoles] = useState<string[]>([]);
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
+    const [updateError, setUpdateError] = useState<string | null>(null);
+    const [updateSuccess, setUpdateSuccess] = useState<string | null>(null);
+
+    useEffect(() => {
+        if (updateSuccess) {
+            const timer = setTimeout(() => setUpdateSuccess(null), 3000);
+            return () => clearTimeout(timer);
+        }
+    }, [updateSuccess]);
 
     const rolesList: RoleConfig[] = [
         {
@@ -77,7 +88,7 @@ export default function UpdateUser({ userId, setUpdate }: UpdateUserProps) {
             const err = error as {
                 response?: { data?: { message?: string } };
             };
-            alert(
+            setUpdateError(
                 err.response?.data?.message ||
                     "Falha ao carregar dados do usuário.",
             );
@@ -107,6 +118,8 @@ export default function UpdateUser({ userId, setUpdate }: UpdateUserProps) {
 
         try {
             setSaving(true);
+            setUpdateError(null);
+            setUpdateSuccess(null);
 
             const rolesToAdd = selectedRoles.filter(
                 (role) => !initialRoles.includes(role),
@@ -127,12 +140,12 @@ export default function UpdateUser({ userId, setUpdate }: UpdateUserProps) {
                 });
             }
 
-            setUpdate(false);
+            setUpdateSuccess("Perfis atualizados com sucesso!");
         } catch (error: unknown) {
             const err = error as {
                 response?: { data?: { message?: string } };
             };
-            alert(
+            setUpdateError(
                 err.response?.data?.message ||
                     "Falha ao atualizar perfis do usuário.",
             );
@@ -267,7 +280,21 @@ export default function UpdateUser({ userId, setUpdate }: UpdateUserProps) {
                     </div>
                 </div>
 
-                <div className="flex justify-end gap-3 border-t border-main-border dark:border-main-border-dark pt-4">
+                {updateError && (
+                    <div className="flex items-center gap-2 p-3 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-600 dark:text-rose-400 text-sm font-medium animate-fade-in">
+                        <AlertCircleIcon className="w-4 h-4 shrink-0" />
+                        {updateError}
+                    </div>
+                )}
+
+                {updateSuccess && (
+                    <div className="flex items-center gap-2 p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-sm font-medium animate-fade-in">
+                        <CheckCircleIcon className="w-4 h-4 shrink-0" />
+                        {updateSuccess}
+                    </div>
+                )}
+
+                <div className="flex flex-col sm:flex-row justify-end gap-3 border-t border-main-border dark:border-main-border-dark pt-4">
                     <button
                         className="flex justify-center items-center gap-2 py-2 px-3 bg-secondary-bg dark:bg-secondary-bg-dark hover:scale-[1.02] rounded-lg transition
                             text-main-color dark:text-main-color-dark text-md font-semibold cursor-pointer shadow-md"

@@ -3,6 +3,8 @@ import {
     CheckCircle2Icon,
     AlbumIcon,
     IdCardLanyardIcon,
+    AlertCircleIcon,
+    XIcon,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { AdminService } from "../../../services/admin.services";
@@ -11,6 +13,7 @@ export default function DashboardTab() {
     const [activeUsers, setActiveUsers] = useState(0);
     const [createdFigures, setCreatedFigures] = useState(0);
     const [figuresInAlbum, setFiguresInAlbum] = useState(0);
+    const [dashboardError, setDashboardError] = useState<string | null>(null);
 
     useEffect(() => {
         const getStatsForFillDashboard = async () => {
@@ -23,7 +26,7 @@ export default function DashboardTab() {
                 const err = error as {
                     response?: { data?: { message?: string } };
                 };
-                alert(
+                setDashboardError(
                     err.response?.data?.message ||
                         "Falha ao buscar dados para o dashboard.",
                 );
@@ -104,6 +107,24 @@ export default function DashboardTab() {
                 </p>
             </div>
 
+            {dashboardError && (
+                <div
+                    className="flex items-center justify-between gap-2 p-3 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-600 dark:text-rose-400 
+                        text-sm font-medium animate-fade-in"
+                >
+                    <div className="flex items-center gap-2">
+                        <AlertCircleIcon className="w-4 h-4 shrink-0" />
+                        {dashboardError}
+                    </div>
+                    <button
+                        onClick={() => setDashboardError(null)}
+                        className="p-1 hover:bg-rose-500/10 rounded-lg transition-colors cursor-pointer shrink-0"
+                    >
+                        <XIcon className="w-3.5 h-3.5" />
+                    </button>
+                </div>
+            )}
+
             <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {stats.map((stat, idx) => {
                     const Icon = stat.icon;
@@ -158,7 +179,8 @@ export default function DashboardTab() {
                             >
                                 <div className="w-full bg-zinc-100 dark:bg-zinc-800 rounded-t-lg h-60 flex items-end overflow-hidden">
                                     <div
-                                        className="w-full bg-linear-to-t from-teal-500 to-emerald-400 dark:from-yellow-600 dark:to-amber-400 group-hover:opacity-85 rounded-t-lg transition-all duration-500 ease-out"
+                                        className="w-full bg-linear-to-t from-teal-500 to-emerald-400 dark:from-yellow-600 dark:to-amber-400 group-hover:opacity-85 
+                                            rounded-t-lg transition-all duration-500 ease-out"
                                         style={{ height: `${val}%` }}
                                     />
                                 </div>
@@ -179,7 +201,10 @@ export default function DashboardTab() {
                         ))}
                     </div>
 
-                    <div className="flex items-center pt-4 border-t border-main-border dark:border-main-border-dark text-xs text-secondary-color dark:text-secondary-color-dark">
+                    <div
+                        className="flex items-center pt-4 border-t border-main-border dark:border-main-border-dark text-xs text-secondary-color 
+                            dark:text-secondary-color-dark"
+                    >
                         <span className="flex items-center gap-1 text-emerald-500">
                             <CheckCircle2Icon className="w-3.5 h-3.5" />{" "}
                             Atualizado em tempo real

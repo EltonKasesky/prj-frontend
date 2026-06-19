@@ -12,6 +12,14 @@ export const ProfileService = {
         return data;
     },
 
+    getProfilesFromAuthenticatedUser: async (): Promise<
+        ProfileResponseDTO[]
+    > => {
+        const { data } =
+            await api.get<ProfileResponseDTO[]>("/profiles/users/me");
+        return data;
+    },
+
     addProfilesToUser: async (
         userId: string,
         profiles: ProfileToUserRequestDTO,

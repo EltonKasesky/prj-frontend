@@ -1,8 +1,10 @@
 import {
     AlbumIcon,
+    AlertCircleIcon,
     IdCardLanyardIcon,
     TrophyIcon,
     UsersIcon,
+    XIcon,
 } from "lucide-react";
 import { FeatureCard } from "../ui/home/FeatureCard";
 import { AlbumHighlight } from "../ui/home/AlbumHighlight";
@@ -19,6 +21,7 @@ export default function Home() {
     const [album, setAlbum] = useState(0);
     const [missingFigures, setMissingFigures] = useState(0);
     const [missingPercent, setMissingPercent] = useState(0);
+    const [homeError, setHomeError] = useState<string | null>(null);
 
     useEffect(() => {
         const getStatsForFillHomePage = async () => {
@@ -34,7 +37,7 @@ export default function Home() {
                 const err = error as {
                     response?: { data?: { message?: string } };
                 };
-                alert(
+                setHomeError(
                     err.response?.data?.message ||
                         "Falha ao buscar dados para a página inicial.",
                 );
@@ -58,7 +61,23 @@ export default function Home() {
     };
 
     return (
-        <main className="min-h-screen bg-secondary-bg dark:bg-secondary-bg-dark transition-colors duration-300">
+        <main className="min-h-screen bg-secondary-bg dark:bg-secondary-bg-dark transition-colors duration-300 animate-fade-in">
+            {homeError && (
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4">
+                    <div className="flex items-center justify-between gap-2 p-3 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-600 dark:text-rose-400 text-sm font-medium animate-fade-in">
+                        <div className="flex items-center gap-2">
+                            <AlertCircleIcon className="w-4 h-4 shrink-0" />
+                            {homeError}
+                        </div>
+                        <button
+                            onClick={() => setHomeError(null)}
+                            className="p-1 hover:bg-rose-500/10 rounded-lg transition-colors cursor-pointer shrink-0"
+                        >
+                            <XIcon className="w-3.5 h-3.5" />
+                        </button>
+                    </div>
+                </div>
+            )}
             <section className="relative max-w-7xl mx-auto px-4 pt-16 pb-20 sm:px-6 lg:px-8 text-center overflow-hidden">
                 <div className="absolute top-0 left-1/2 -translate-x-1/2 w-125 h-125 bg-emerald-500/15 dark:bg-amber-500/10 blur-3xl rounded-full pointer-events-none" />
 

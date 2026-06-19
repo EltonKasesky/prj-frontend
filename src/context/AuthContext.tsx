@@ -7,7 +7,7 @@ import {
 } from "react";
 import type { UserResponseDTO } from "../types/user.types";
 import { UserService } from "../services/user.services";
-import { hasRole } from "../utils/jwt";
+import { hasRole } from "../utils/jwt.utils";
 
 interface AuthContextType {
     user: UserResponseDTO | null;
