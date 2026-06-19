@@ -1,5 +1,10 @@
 import { api } from "../api/client";
-import type { SpringPageResponse, UserResponseDTO } from "../types/user.types";
+import type {
+    ChangePasswordRequestDTO,
+    SpringPageResponse,
+    UpdateUserRequestDTO,
+    UserResponseDTO,
+} from "../types/user.types";
 
 export const UserService = {
     getAllUsers: async (
@@ -39,5 +44,17 @@ export const UserService = {
 
     enableUserById: async (userId: string): Promise<void> => {
         await api.patch(`users/${userId}`);
+    },
+
+    updateProfile: async (data: UpdateUserRequestDTO): Promise<void> => {
+        await api.patch<void>("/users/me", data);
+    },
+
+    changePassword: async (data: ChangePasswordRequestDTO): Promise<void> => {
+        await api.patch("/users/password", data);
+    },
+
+    deactivateAccount: async (): Promise<void> => {
+        await api.delete("/users/me");
     },
 };

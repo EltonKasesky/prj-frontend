@@ -1,35 +1,53 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import InputLabel from "../../InputLabel";
 import { UserService } from "../../../../services/user.services";
-import { LoaderCircleIcon, Undo2Icon, UserPlusIcon } from "lucide-react";
+import {
+    AlertCircleIcon,
+    CheckCircleIcon,
+    LoaderCircleIcon,
+    Undo2Icon,
+    UserPlusIcon,
+} from "lucide-react";
 
 interface RegisterProps {
-    register: boolean;
     setRegister: (register: boolean) => void;
 }
 
-export default function Register({ register, setRegister }: RegisterProps) {
+export default function Register({ setRegister }: RegisterProps) {
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [loading, setLoading] = useState(false);
+    const [registerError, setRegisterError] = useState<string | null>(null);
+    const [registerSuccess, setRegisterSuccess] = useState<string | null>(null);
+
+    useEffect(() => {
+        if (registerSuccess) {
+            const timer = setTimeout(() => setRegisterSuccess(null), 3000);
+            return () => clearTimeout(timer);
+        }
+    }, [registerSuccess]);
 
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
 
         try {
             setLoading(true);
+            setRegisterError(null);
+            setRegisterSuccess(null);
             await UserService.createUser(name, email, password);
 
             cleanFields();
-            setRegister(!register);
+            setRegisterSuccess("Usuário criado com sucesso!");
         } catch (error: unknown) {
             cleanFields();
 
             const err = error as {
                 response?: { data?: { message?: string } };
             };
-            alert(err.response?.data?.message || "Falha ao criar usuário.");
+            setRegisterError(
+                err.response?.data?.message || "Falha ao criar usuário.",
+            );
         } finally {
             setLoading(false);
         }
@@ -87,6 +105,20 @@ export default function Register({ register, setRegister }: RegisterProps) {
                     />
 
                     <div className="border-b border-main-border dark:border-main-border-dark pb-4"></div>
+
+                    {registerError && (
+                        <div className="flex items-center gap-2 p-3 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-600 dark:text-rose-400 text-sm font-medium animate-fade-in">
+                            <AlertCircleIcon className="w-4 h-4 shrink-0" />
+                            {registerError}
+                        </div>
+                    )}
+
+                    {registerSuccess && (
+                        <div className="flex items-center gap-2 p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-sm font-medium animate-fade-in">
+                            <CheckCircleIcon className="w-4 h-4 shrink-0" />
+                            {registerSuccess}
+                        </div>
+                    )}
 
                     <div className="flex flex-col sm:flex-row sm:justify-end gap-3">
                         <button

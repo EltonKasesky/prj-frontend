@@ -1,8 +1,13 @@
-import { CornerDownLeftIcon, LoaderCircleIcon, LogInIcon } from "lucide-react";
+import {
+    AlertCircleIcon,
+    CornerDownLeftIcon,
+    LoaderCircleIcon,
+    LogInIcon,
+} from "lucide-react";
 import { Link, useNavigate } from "react-router";
 import ThemeToogle from "../ui/header/ThemeToogle";
 import InputLabel from "../ui/InputLabel";
-import logo from "../../assets/login.png";
+import logo from "../../assets/icons/login.png";
 import { AuthService } from "../../services/auth.services";
 import { useState } from "react";
 import { useAuth } from "../../context/AuthContext";
@@ -11,6 +16,7 @@ export default function Login() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [loading, setLoading] = useState(false);
+    const [loginError, setLoginError] = useState<string | null>(null);
     const { login } = useAuth();
     const navigate = useNavigate();
 
@@ -19,6 +25,7 @@ export default function Login() {
 
         try {
             setLoading(true);
+            setLoginError(null);
 
             const response = await AuthService.authUser(email, password);
             await login(response.token);
@@ -30,7 +37,9 @@ export default function Login() {
             const err = error as {
                 response?: { data?: { message?: string } };
             };
-            alert(err.response?.data?.message || "Falha ao realizar login.");
+            setLoginError(
+                err.response?.data?.message || "Falha ao realizar login.",
+            );
         }
     };
 
@@ -98,6 +107,13 @@ export default function Login() {
                                 placeholder="********"
                                 required
                             />
+
+                            {loginError && (
+                                <div className="flex items-center gap-2 p-3 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-600 dark:text-rose-400 text-sm font-medium animate-fade-in">
+                                    <AlertCircleIcon className="w-4 h-4 shrink-0" />
+                                    {loginError}
+                                </div>
+                            )}
 
                             <button
                                 type="submit"

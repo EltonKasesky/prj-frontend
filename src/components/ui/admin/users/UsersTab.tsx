@@ -69,7 +69,7 @@ export default function UsersTab() {
                     setUpdate={setUpdate}
                 />
             ) : register ? (
-                <RegisterUser register={register} setRegister={setRegister} />
+                <RegisterUser setRegister={setRegister} />
             ) : (
                 <UsersTable
                     users={users}

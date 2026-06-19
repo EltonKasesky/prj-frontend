@@ -14,3 +14,13 @@ export interface UserResponseDTO {
     createdAt: Date;
     roles: string[];
 }
+
+export interface UpdateUserRequestDTO {
+    name: string;
+}
+
+export interface ChangePasswordRequestDTO {
+    currentPassword: string;
+    newPassword: string;
+    confirmPassword: string;
+}
