@@ -5,21 +5,32 @@ import {
     IdCardLanyardIcon,
 } from "lucide-react";
 import { useEffect, useState } from "react";
+import { AdminService } from "../../../services/admin.services";
 
 export default function DashboardTab() {
     const [activeUsers, setActiveUsers] = useState(0);
     const [createdFigures, setCreatedFigures] = useState(0);
     const [figuresInAlbum, setFiguresInAlbum] = useState(0);
 
-    //TODO: Criar estatisticas
     useEffect(() => {
-        const getStats = async () => {
-            setActiveUsers(0);
-            setCreatedFigures(0);
-            setFiguresInAlbum(0);
+        const getStatsForFillDashboard = async () => {
+            try {
+                const response = await AdminService.getStatsForDashboardTab();
+                setActiveUsers(response.activeUsers);
+                setCreatedFigures(response.figuresCreated);
+                setFiguresInAlbum(response.figuresInAlbum);
+            } catch (error: unknown) {
+                const err = error as {
+                    response?: { data?: { message?: string } };
+                };
+                alert(
+                    err.response?.data?.message ||
+                        "Falha ao buscar dados para o dashboard.",
+                );
+            }
         };
 
-        getStats();
+        getStatsForFillDashboard();
     }, []);
 
     const stats = [
@@ -99,7 +110,8 @@ export default function DashboardTab() {
                     return (
                         <div
                             key={idx}
-                            className="bg-white dark:bg-zinc-900/60 p-6 rounded-2xl border border-main-border dark:border-main-border-dark shadow-sm hover:shadow-md transition-all duration-300"
+                            className="bg-white dark:bg-zinc-900/60 p-6 rounded-2xl border border-main-border dark:border-main-border-dark shadow-md 
+                                hover:shadow-lg transition-all duration-300"
                         >
                             <div className="flex justify-between items-start">
                                 <div className={`p-3 rounded-xl ${stat.color}`}>
@@ -125,7 +137,10 @@ export default function DashboardTab() {
 
             {/* TODO: Criar estatisticas semanais do album */}
             <section className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                <div className="lg:col-span-2 bg-white dark:bg-zinc-900/60 p-6 rounded-2xl border border-main-border dark:border-main-border-dark shadow-sm flex flex-col justify-between">
+                <div
+                    className="lg:col-span-2 bg-white dark:bg-zinc-900/60 p-6 rounded-2xl border border-main-border dark:border-main-border-dark 
+                        shadow-md flex flex-col justify-between"
+                >
                     <div>
                         <h3 className="font-bold text-lg text-main-color dark:text-main-color-dark">
                             Engajamento da Comunidade
@@ -172,7 +187,7 @@ export default function DashboardTab() {
                     </div>
                 </div>
 
-                <div className="bg-white dark:bg-zinc-900/60 p-6 rounded-2xl border border-main-border dark:border-main-border-dark shadow-sm">
+                <div className="bg-white dark:bg-zinc-900/60 p-6 rounded-2xl border border-main-border dark:border-main-border-dark shadow-md">
                     <h3 className="font-bold text-lg text-main-color dark:text-main-color-dark">
                         Atividade Recente
                     </h3>

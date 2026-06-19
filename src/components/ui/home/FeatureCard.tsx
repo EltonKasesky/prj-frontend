@@ -13,8 +13,8 @@ export function FeatureCard({
 }: FeatureCardProps) {
     return (
         <div
-            className="flex flex-col items-center p-6 bg-main-bg dark:bg-main-bg-dark rounded-2xl shadow-sm border border-main-border dark:border-main-border-dark 
-                transition-all duration-300 hover:shadow-md hover:-translate-y-1"
+            className="flex flex-col items-center p-6 bg-main-bg dark:bg-main-bg-dark rounded-2xl shadow-md border border-main-border dark:border-main-border-dark 
+                transition-all duration-300 hover:shadow-lg hover:-translate-y-1"
         >
             <div className="p-3 bg-secondary-bg dark:bg-secondary-bg-dark text-highlight-color dark:text-highlight-color-dark rounded-xl mb-4">
                 <Icon className="w-6 h-6" />

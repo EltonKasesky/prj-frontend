@@ -56,6 +56,7 @@ export default function Header() {
                         <button
                             onClick={() => setIsMenuOpen(!isMenuOpen)}
                             className="text-main-color dark:text-main-color-dark cursor-pointer p-2 transition-all"
+                            title="Exibir Menu"
                         >
                             {isMenuOpen ? <Minimize2Icon /> : <MenuIcon />}
                         </button>

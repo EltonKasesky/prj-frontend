@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import {
     SearchIcon,
-    UserPlusIcon,
     Edit2Icon,
     Trash2Icon,
     MailIcon,
@@ -9,43 +8,74 @@ import {
     ChevronLeftIcon,
     ChevronRightIcon,
     ChevronsRightIcon,
+    UserRoundCheckIcon,
 } from "lucide-react";
-import { UserService } from "../../../services/user.services";
-import type { UserResponseDTO } from "../../../types/user.types";
+import { UserService } from "../../../../services/user.services";
+import type { UserResponseDTO } from "../../../../types/user.types";
 
-export default function UsersTab() {
+interface UsersTableProps {
+    users: UserResponseDTO[];
+    setUsers: (users: UserResponseDTO[]) => void;
+    setUserId: (userId: string) => void;
+    showUpdate: () => void;
+}
+
+export default function UsersTable({
+    users,
+    setUsers,
+    setUserId,
+    showUpdate,
+}: UsersTableProps) {
     const [searchTerm, setSearchTerm] = useState("");
-    const [users, setUsers] = useState<UserResponseDTO[]>([]);
     const [page, setPage] = useState(0);
     const [size, setSize] = useState(5);
     const [totalPages, setTotalPages] = useState(0);
     const [totalElements, setTotalElements] = useState(0);
 
+    const getUsers = async () => {
+        try {
+            const data = await UserService.getAllUsers(page, size);
+            setUsers(data.content);
+            setTotalPages(data.totalPages);
+            setTotalElements(data.totalElements);
+        } catch (error: unknown) {
+            const err = error as {
+                response?: { data?: { message?: string } };
+            };
+            alert(err.response?.data?.message || "Falha ao buscar usuários.");
+        }
+    };
+
     useEffect(() => {
-        const getUsers = async () => {
-            try {
-                const data = await UserService.getAllUsers(page, size);
-                setUsers(data.content);
-                setTotalPages(data.totalPages);
-                setTotalElements(data.totalElements);
-            } catch (error: unknown) {
-                const err = error as {
-                    response?: { data?: { message?: string } };
-                };
-                alert(
-                    err.response?.data?.message || "Falha ao buscar usuários.",
-                );
-            }
+        const fetchGetUsers = async () => {
+            await getUsers();
         };
 
-        getUsers();
+        fetchGetUsers();
     }, [page, size]);
 
-    const statusColor = (userStatus: boolean) => {
-        if (userStatus)
-            return "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400";
+    const disableUser = async (userId: string) => {
+        try {
+            await UserService.disableUserById(userId);
+            await getUsers();
+        } catch (error: unknown) {
+            const err = error as {
+                response?: { data?: { message?: string } };
+            };
+            alert(err.response?.data?.message || "Falha ao desativar usuário.");
+        }
+    };
 
-        return "bg-rose-500/10 text-rose-600 dark:text-rose-400";
+    const enableUser = async (userId: string) => {
+        try {
+            await UserService.enableUserById(userId);
+            await getUsers();
+        } catch (error: unknown) {
+            const err = error as {
+                response?: { data?: { message?: string } };
+            };
+            alert(err.response?.data?.message || "Falha ao ativar usuário.");
+        }
     };
 
     const filteredUsers = users.filter(
@@ -61,39 +91,32 @@ export default function UsersTab() {
             ),
     );
 
+    const statusColor = (userStatus: boolean) => {
+        if (userStatus)
+            return "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400";
+
+        return "bg-rose-500/10 text-rose-600 dark:text-rose-400";
+    };
+
     return (
-        <section className="space-y-6 animate-fade-in">
-            <section className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                <div>
-                    <h2 className="text-2xl font-extrabold text-main-color dark:text-main-color-dark">
-                        Gerenciamento de Usuários
-                    </h2>
-                    <p className="text-secondary-color dark:text-secondary-color-dark mt-1">
-                        Crie, edite e administre os perfis de usuários do
-                        sistema.
-                    </p>
-                </div>
-
-                <button className="flex items-center justify-center gap-2 bg-highlight-bg dark:bg-highlight-bg-dark text-white text-sm font-bold cursor-pointer py-2.5 px-4 rounded-xl shadow-md transition-all transform hover:scale-[1.02] shrink-0 self-start sm:self-auto">
-                    <UserPlusIcon className="w-4 h-4" />
-                    Novo Usuário
-                </button>
+        <>
+            <section className="relative shadow-md rounded-xl">
+                <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-secondary-color dark:text-secondary-color-dark" />
+                <input
+                    type="text"
+                    placeholder="Buscar por nome, email ou cargo..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="w-full bg-main-bg dark:bg-main-bg-dark/50 border border-main-border dark:border-main-border-dark rounded-xl 
+                            py-2 pl-10 pr-4 text-sm text-main-color dark:text-main-color-dark placeholder-secondary-color focus:outline-2 focus:outline-main-focus 
+                            dark:focus:outline-main-focus-dark"
+                />
             </section>
 
-            <section className="flex bg-white dark:bg-zinc-900/60 p-4 rounded-2xl border border-main-border dark:border-main-border-dark shadow-sm">
-                <div className="relative flex-1">
-                    <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-secondary-color dark:text-secondary-color-dark" />
-                    <input
-                        type="text"
-                        placeholder="Buscar por nome, email ou cargo..."
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                        className="w-full bg-secondary-bg dark:bg-secondary-bg-dark border border-main-border dark:border-main-border-dark rounded-xl py-2 pl-10 pr-4 text-sm text-main-color dark:text-main-color-dark placeholder-secondary-color focus:outline-2 focus:outline-main-focus dark:focus:outline-main-focus-dark"
-                    />
-                </div>
-            </section>
-
-            <section className="bg-white dark:bg-zinc-900/60 rounded-2xl border border-main-border dark:border-main-border-dark shadow-sm overflow-hidden">
+            <section
+                className="bg-main-bg dark:bg-main-bg-dark rounded-2xl border border-main-border dark:border-main-border-dark shadow-md overflow-hidden 
+                    animate-fade-in"
+            >
                 <div className="overflow-x-auto">
                     <table className="w-full text-left border-collapse">
                         <thead>
@@ -124,7 +147,10 @@ export default function UsersTab() {
                                     >
                                         <td className="p-4">
                                             <div className="flex items-center gap-3">
-                                                <div className="w-10 h-10 rounded-full bg-highlight-bg dark:bg-highlight-bg-dark flex items-center justify-center font-bold text-white">
+                                                <div
+                                                    className="w-10 h-10 rounded-full bg-highlight-bg dark:bg-highlight-bg-dark flex items-center justify-center 
+                                                        font-bold text-white"
+                                                >
                                                     {(user.name || "").charAt(
                                                         0,
                                                     )}
@@ -158,18 +184,44 @@ export default function UsersTab() {
                                         </td>
                                         <td className="p-4 text-right">
                                             <div className="flex justify-end gap-2">
-                                                <button
-                                                    title="Editar"
-                                                    className="p-2 text-secondary-color dark:text-secondary-color-dark hover:text-main-hover dark:hover:text-main-hover-dark rounded-lg hover:bg-secondary-bg dark:hover:bg-secondary-bg-dark cursor-pointer transition-colors"
-                                                >
-                                                    <Edit2Icon className="w-4 h-4" />
-                                                </button>
-                                                <button
-                                                    title="Excluir"
-                                                    className="p-2 text-rose-500 hover:text-rose-600 rounded-lg hover:bg-rose-500/10 cursor-pointer transition-colors"
-                                                >
-                                                    <Trash2Icon className="w-4 h-4" />
-                                                </button>
+                                                {user.status && (
+                                                    <button
+                                                        title="Editar"
+                                                        className="p-2 text-secondary-color dark:text-secondary-color-dark hover:text-main-hover 
+                                                        dark:hover:text-main-hover-dark rounded-lg hover:bg-secondary-bg dark:hover:bg-secondary-bg-dark 
+                                                        cursor-pointer transition-colors"
+                                                        onClick={() => {
+                                                            setUserId(user.id);
+                                                            showUpdate();
+                                                        }}
+                                                    >
+                                                        <Edit2Icon className="w-4 h-4" />
+                                                    </button>
+                                                )}
+
+                                                {!user.status ? (
+                                                    <button
+                                                        title="Ativar"
+                                                        className="p-2 text-green-300 hover:text-green-500 rounded-lg hover:bg-green-500/10 cursor-pointer 
+                                                            transition-colors"
+                                                        onClick={() =>
+                                                            enableUser(user.id)
+                                                        }
+                                                    >
+                                                        <UserRoundCheckIcon className="w-4 h-4" />
+                                                    </button>
+                                                ) : (
+                                                    <button
+                                                        title="Desativar"
+                                                        className="p-2 text-rose-500 hover:text-rose-600 rounded-lg hover:bg-rose-500/10 cursor-pointer 
+                                                            transition-colors"
+                                                        onClick={() =>
+                                                            disableUser(user.id)
+                                                        }
+                                                    >
+                                                        <Trash2Icon className="w-4 h-4" />
+                                                    </button>
+                                                )}
                                             </div>
                                         </td>
                                     </tr>
@@ -189,7 +241,10 @@ export default function UsersTab() {
                     </table>
                 </div>
 
-                <section className="flex flex-col sm:flex-row items-center justify-between gap-4 p-4 border-t border-main-border dark:border-main-border-dark bg-secondary-bg/20 dark:bg-secondary-bg-dark/10">
+                <section
+                    className="flex flex-col sm:flex-row items-center justify-between gap-4 p-4 border-t border-main-border dark:border-main-border-dark 
+                        bg-secondary-bg/20 dark:bg-secondary-bg-dark/10"
+                >
                     <div className="flex items-center gap-4">
                         <span className="text-xs font-semibold text-secondary-color dark:text-secondary-color-dark">
                             Itens por página:
@@ -200,7 +255,10 @@ export default function UsersTab() {
                                 setSize(Number(e.target.value));
                                 setPage(0);
                             }}
-                            className="bg-secondary-bg dark:bg-secondary-bg-dark border border-main-border dark:border-main-border-dark rounded-lg px-2 py-1 text-xs text-main-color dark:text-main-color-dark focus:outline-2 focus:outline-main-focus dark:focus:outline-main-focus-dark cursor-pointer font-medium"
+                            className="bg-secondary-bg dark:bg-secondary-bg-dark border border-main-border dark:border-main-border-dark rounded-lg px-2 py-1 
+                                text-xs text-main-color dark:text-main-color-dark focus:outline-2 focus:outline-main-focus dark:focus:outline-main-focus-dark 
+                                cursor-pointer font-medium"
+                            title="Itens por Página"
                         >
                             {[5, 10, 20, 50].map((value) => (
                                 <option key={value} value={value}>
@@ -220,7 +278,9 @@ export default function UsersTab() {
                             onClick={() => setPage(0)}
                             disabled={page === 0}
                             title="Primeira Página"
-                            className="p-1.5 rounded-lg border border-main-border dark:border-main-border-dark text-secondary-color dark:text-secondary-color-dark hover:bg-secondary-bg dark:hover:bg-secondary-bg-dark disabled:opacity-40 disabled:hover:bg-transparent cursor-pointer disabled:cursor-not-allowed transition-all"
+                            className="p-1.5 rounded-lg border border-main-border dark:border-main-border-dark text-secondary-color dark:text-secondary-color-dark 
+                                hover:bg-secondary-bg dark:hover:bg-secondary-bg-dark disabled:opacity-40 disabled:hover:bg-transparent cursor-pointer 
+                                disabled:cursor-not-allowed transition-all"
                         >
                             <ChevronsLeftIcon className="w-4 h-4" />
                         </button>
@@ -230,7 +290,9 @@ export default function UsersTab() {
                             }
                             disabled={page === 0}
                             title="Página Anterior"
-                            className="p-1.5 rounded-lg border border-main-border dark:border-main-border-dark text-secondary-color dark:text-secondary-color-dark hover:bg-secondary-bg dark:hover:bg-secondary-bg-dark disabled:opacity-40 disabled:hover:bg-transparent cursor-pointer disabled:cursor-not-allowed transition-all"
+                            className="p-1.5 rounded-lg border border-main-border dark:border-main-border-dark text-secondary-color dark:text-secondary-color-dark 
+                                hover:bg-secondary-bg dark:hover:bg-secondary-bg-dark disabled:opacity-40 disabled:hover:bg-transparent cursor-pointer 
+                                disabled:cursor-not-allowed transition-all"
                         >
                             <ChevronLeftIcon className="w-4 h-4" />
                         </button>
@@ -249,7 +311,9 @@ export default function UsersTab() {
                             }
                             disabled={page >= totalPages - 1}
                             title="Próxima Página"
-                            className="p-1.5 rounded-lg border border-main-border dark:border-main-border-dark text-secondary-color dark:text-secondary-color-dark hover:bg-secondary-bg dark:hover:bg-secondary-bg-dark disabled:opacity-40 disabled:hover:bg-transparent cursor-pointer disabled:cursor-not-allowed transition-all"
+                            className="p-1.5 rounded-lg border border-main-border dark:border-main-border-dark text-secondary-color dark:text-secondary-color-dark 
+                                hover:bg-secondary-bg dark:hover:bg-secondary-bg-dark disabled:opacity-40 disabled:hover:bg-transparent cursor-pointer 
+                                disabled:cursor-not-allowed transition-all"
                         >
                             <ChevronRightIcon className="w-4 h-4" />
                         </button>
@@ -257,13 +321,15 @@ export default function UsersTab() {
                             onClick={() => setPage(totalPages - 1)}
                             disabled={page >= totalPages - 1}
                             title="Última Página"
-                            className="p-1.5 rounded-lg border border-main-border dark:border-main-border-dark text-secondary-color dark:text-secondary-color-dark hover:bg-secondary-bg dark:hover:bg-secondary-bg-dark disabled:opacity-40 disabled:hover:bg-transparent cursor-pointer disabled:cursor-not-allowed transition-all"
+                            className="p-1.5 rounded-lg border border-main-border dark:border-main-border-dark text-secondary-color dark:text-secondary-color-dark 
+                                hover:bg-secondary-bg dark:hover:bg-secondary-bg-dark disabled:opacity-40 disabled:hover:bg-transparent cursor-pointer 
+                                disabled:cursor-not-allowed transition-all"
                         >
                             <ChevronsRightIcon className="w-4 h-4" />
                         </button>
                     </div>
                 </section>
             </section>
-        </section>
+        </>
     );
 }
