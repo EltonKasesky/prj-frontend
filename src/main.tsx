@@ -5,12 +5,15 @@ import { ThemeProvider } from "./context/ThemeContext.tsx";
 import { router } from "./routes/router.tsx";
 import "./assets/index.css";
 import { AuthProvider } from "./context/AuthContext.tsx";
+import AppGate from "./components/layout/AppGate.tsx";
 
 createRoot(document.getElementById("root")!).render(
     <StrictMode>
         <ThemeProvider>
             <AuthProvider>
-                <RouterProvider router={router} />
+                <AppGate>
+                    <RouterProvider router={router} />
+                </AppGate>
             </AuthProvider>
         </ThemeProvider>
     </StrictMode>,

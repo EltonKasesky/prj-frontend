@@ -31,6 +31,10 @@ export default function AlbumGuard({ children }: AlbumGuardProps) {
         );
     }
 
+    if (!isAuthenticated) {
+        return <Navigate to="/" replace />;
+    }
+
     if (!canShowAlbumPage()) {
         return <Navigate to="/404" replace />;
     }

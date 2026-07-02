@@ -37,6 +37,9 @@
     /* Animations */
     --animate-fade-in: fade-in 0.2s ease-out;
     --animate-slide-in: slide-in 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    --animate-fade-out: fade-out 0.3s ease-in forwards;
+    --animate-splash-pulse: splash-pulse 1.8s ease-in-out infinite;
+    --animate-splash-bar: splash-bar 1.3s ease-in-out infinite;
 
     @keyframes fade-in {
         from {
@@ -46,12 +49,37 @@
             opacity: 1;
         }
     }
+    @keyframes fade-out {
+        from {
+            opacity: 1;
+        }
+        to {
+            opacity: 0;
+        }
+    }
     @keyframes slide-in {
         from {
             transform: translateX(-100%);
         }
         to {
             transform: translateX(0);
+        }
+    }
+    @keyframes splash-pulse {
+        0%,
+        100% {
+            transform: scale(1);
+        }
+        50% {
+            transform: scale(1.08);
+        }
+    }
+    @keyframes splash-bar {
+        0% {
+            transform: translateX(-100%);
+        }
+        100% {
+            transform: translateX(300%);
         }
     }
 }

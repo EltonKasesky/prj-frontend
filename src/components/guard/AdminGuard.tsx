@@ -29,6 +29,10 @@ export default function AdminGuard({ children }: AdminGuardProps) {
         );
     }
 
+    if (!isAuthenticated) {
+        return <Navigate to="/" replace />;
+    }
+
     if (!canShowAdminPage()) {
         return <Navigate to="/404" replace />;
     }
