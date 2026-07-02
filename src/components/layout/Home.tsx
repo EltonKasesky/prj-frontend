@@ -16,7 +16,6 @@ import { StatisticsService } from "../../services/statistics.services";
 export default function Home() {
     const { isAuthenticated, isAdmin, isAuthor, isCollector } = useAuth();
     const [figures, setFigures] = useState(0);
-    const [teams, setTeams] = useState(0);
     const [authors, setAuthors] = useState(0);
     const [album, setAlbum] = useState(0);
     const [missingFigures, setMissingFigures] = useState(0);
@@ -29,10 +28,13 @@ export default function Home() {
                 const response = await StatisticsService.getStatsForHomePage();
                 setAuthors(response.authors);
                 setFigures(response.figures);
-                setTeams(response.teams);
                 setAlbum(response.album);
-                setMissingFigures(response.album - response.figures);
-                setMissingPercent((response.album / response.figures) * 100);
+                setMissingFigures(response.figures - response.album);
+                setMissingPercent(
+                    response.figures > 0
+                        ? (response.album / response.figures) * 100
+                        : 0,
+                );
             } catch (error: unknown) {
                 const err = error as {
                     response?: { data?: { message?: string } };
@@ -126,7 +128,7 @@ export default function Home() {
             <section className="max-w-7xl mx-auto px-4 pb-12 lg:pb-24 sm:px-6 lg:px-8">
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch">
                     <div className="lg:col-span-2">
-                        <AlbumHighlight figures={figures} teams={teams} />
+                        <AlbumHighlight figures={figures} />
                     </div>
 
                     <div

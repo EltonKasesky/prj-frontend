@@ -1,14 +1,13 @@
-import { SparklesIcon, UsersIcon, TrophyIcon } from "lucide-react";
+import { SparklesIcon, UsersIcon } from "lucide-react";
 
 interface AlbumHighlightProps {
     figures: number;
-    teams: number;
 }
 
-export function AlbumHighlight({ figures, teams }: AlbumHighlightProps) {
+export function AlbumHighlight({ figures }: AlbumHighlightProps) {
     return (
         <div
-            className="relative overflow-hidden bg-linear-to-br from-teal-600 via-emerald-600 to-cyan-700 dark:from-yellow-600 
+            className="relative overflow-hidden bg-linear-to-br from-teal-600 via-emerald-600 to-cyan-700 dark:from-yellow-600
                 dark:via-amber-400 dark:to-amber-200 rounded-3xl p-8 text-white shadow-lg"
         >
             <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full blur-3xl -mr-20 -mt-20 pointer-events-none" />
@@ -26,7 +25,7 @@ export function AlbumHighlight({ figures, teams }: AlbumHighlightProps) {
                     nos gramados do Canadá, Estados Unidos e México.
                 </p>
 
-                <div className="grid grid-cols-2 gap-4 border-t border-white/20 pt-6">
+                <div className="border-t border-white/20 pt-6">
                     <div className="flex items-center gap-3">
                         <UsersIcon className="w-5 h-5 text-emerald-200 dark:text-white" />
                         <div>
@@ -35,17 +34,6 @@ export function AlbumHighlight({ figures, teams }: AlbumHighlightProps) {
                             </p>
                             <p className="font-bold text-lg dark:text-gray-100">
                                 {figures} Figuras
-                            </p>
-                        </div>
-                    </div>
-                    <div className="flex items-center gap-3">
-                        <TrophyIcon className="w-5 h-5 text-emerald-200 dark:text-white" />
-                        <div>
-                            <p className="text-sm text-emerald-200 dark:text-white">
-                                Total de Times
-                            </p>
-                            <p className="font-bold text-lg dark:text-gray-100">
-                                {teams} Times
                             </p>
                         </div>
                     </div>
