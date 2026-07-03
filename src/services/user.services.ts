@@ -34,8 +34,13 @@ export const UserService = {
         name: string,
         email: string,
         password: string,
-    ): Promise<void> => {
-        await api.post("/users", { name, email, password });
+    ): Promise<UserResponseDTO> => {
+        const { data } = await api.post<UserResponseDTO>("/users", {
+            name,
+            email,
+            password,
+        });
+        return data;
     },
 
     disableUserById: async (userId: string): Promise<void> => {

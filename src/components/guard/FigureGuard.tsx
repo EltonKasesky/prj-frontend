@@ -29,6 +29,10 @@ export default function FigureGuard({ children }: FigureGuardProps) {
         );
     }
 
+    if (!isAuthenticated) {
+        return <Navigate to="/" replace />;
+    }
+
     if (!canShowFiguresPage()) {
         return <Navigate to="/404" replace />;
     }
